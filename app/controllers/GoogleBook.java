@@ -31,32 +31,46 @@ import com.sun.corba.se.impl.oa.poa.AOMEntry;
 
 import models.*;
 
+/**
+ * Google Bookの旧API（atom形式の通信だけサポート）をJsonに変換するWebサービス
+ * @author eiji
+ */
 public class GoogleBook extends Controller {
 
+	/**
+	 * 本Webサービスの説明ページを表示する
+	 */
 	public static void index() {
 		render();
 	}
+
+	/**
+	 * 本Webサービスの戻り値の例を表示する
+	 */
 	public static void returnValue() {
 		render();
 	}
 
-	private static boolean isEmpty(String string){
+	private static boolean isEmpty(String string) {
 		return string == null || string.trim().equals("");
 	}
-	
-	public static void feedsForm(
-			String q,String startIndex,String maxResults,String minViewability,String lr,String callback){
-		
-	    String url = "http://books.google.com/books/feeds/volumes?";
-	    if(!isEmpty(q)) url +="&q="+q;
-	    if(!isEmpty(startIndex)) url +="&start-index="+startIndex;
-	    if(!isEmpty(maxResults)) url +="&max-results="+maxResults;
-	    if(!isEmpty(minViewability)) url +="&min-viewability="+minViewability;
-	    if(!isEmpty(lr)) url +="&lr="+lr;
-	    Document document = WS
-				.url(url)
-				.get().getXml("UTF-8");
-		
+
+	public static void feedsForm(String q, String startIndex,
+			String maxResults, String minViewability, String lr, String callback) {
+
+		String url = "http://books.google.com/books/feeds/volumes?";
+		if (!isEmpty(q))
+			url += "&q=" + q;
+		if (!isEmpty(startIndex))
+			url += "&start-index=" + startIndex;
+		if (!isEmpty(maxResults))
+			url += "&max-results=" + maxResults;
+		if (!isEmpty(minViewability))
+			url += "&min-viewability=" + minViewability;
+		if (!isEmpty(lr))
+			url += "&lr=" + lr;
+		Document document = WS.url(url).get().getXml("UTF-8");
+
 		Atom2Json atom2Json = new Atom2Json();
 		atom2Json.addNonArrayElemName("gbs:contentVersion");
 		atom2Json.addNonArrayElemName("dc:title");
@@ -67,29 +81,27 @@ public class GoogleBook extends Controller {
 		atom2Json.addNonArrayElemName("dc:date");
 		atom2Json.addNonArrayElemName("dc:creator");
 
-		if(!isEmpty(callback)){
+		if (!isEmpty(callback)) {
 			atom2Json.setCallback(callback);
 		}
 
 		renderJSON(atom2Json.toJson(document));
 	}
-	
+
 	public static void feeds() throws Exception {
-	    String url = "http://books.google.com/books/feeds/volumes?";
-	    String callback = null;
-	    Map<String,String> param = params.allSimple();
-	    for (Map.Entry<String, String> entry : param.entrySet()) {
-	    	if(entry.getKey().equals("callback")){
-	    		callback = entry.getValue();
-	    	}else{
-			    url += "&" + entry.getKey() + "="+ entry.getValue();
-	    	}
+		String url = "http://books.google.com/books/feeds/volumes?";
+		String callback = null;
+		Map<String, String> param = params.allSimple();
+		for (Map.Entry<String, String> entry : param.entrySet()) {
+			if (entry.getKey().equals("callback")) {
+				callback = entry.getValue();
+			} else {
+				url += "&" + entry.getKey() + "=" + entry.getValue();
+			}
 		}
 
-	    Document document = WS
-				.url(url)
-				.get().getXml("UTF-8");
-		
+		Document document = WS.url(url).get().getXml("UTF-8");
+
 		Atom2Json atom2Json = new Atom2Json();
 		atom2Json.addNonArrayElemName("gbs:contentVersion");
 		atom2Json.addNonArrayElemName("dc:title");
@@ -99,7 +111,7 @@ public class GoogleBook extends Controller {
 		atom2Json.addNonArrayElemName("dc:description");
 		atom2Json.addNonArrayElemName("dc:date");
 		atom2Json.addNonArrayElemName("dc:creator");
-		if(callback != null){
+		if (callback != null) {
 			atom2Json.setCallback(callback);
 		}
 
