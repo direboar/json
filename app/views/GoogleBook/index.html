@@ -1,0 +1,23 @@
+#{extends 'main.html' /} #{set title:'GoogleBookのJsonWrapper ' /}
+
+<p><span class="standout">GoogleBookのJsonWrapper</span>
+<p>GoogleBookの検索用のサービスはatom形式しかサポートしていません。javascriptでatomを処理するのはなんか面倒そうだし、jsonpを使えないのは悲しい気がしたのでJsonでラップしてみました。・・・と思ったらhttp://code.google.com/intl/ja/apis/books/docs/v1/getting_started.htmlがあった。しゅーりょーorz
+<p><span class="standout">URLパラメータに関する仕様</span>
+<ol>
+  <li>"callback"パラメータ以外の全てをGoogleBooksのクエリストリングとしてそのまま引渡します。</li>
+  <li>"callback"パラメータが設定されている場合は、callbackの値を関数名としたjsonp形式で返却します。</li>
+</ol>
+<p><span class="standout"><a href="@{GoogleBook.returnValue()}" target="?">戻り値サンプル</a></span>
+
+<p><span class="standout">サンプルフォーム</span>
+<form action="@{GoogleBook.feedsForm()}" method="POST">
+  <table border>
+    <tr><td>q</td><td>  <input type="text" name="q" value="" size="128"/> </td></tr>
+    <tr><td>start-index</td><td>  <input type="text" name="startIndex" value="0" size="60"/> </td></tr>
+    <tr><td>max-results</td><td> <input type="text" name="maxResults" value="10" size="60"/> </td></tr>
+    <tr><td>min-viewability</td><td> <input type="text" name="minViewability" value="" size="60"/> </td></tr>
+    <tr><td>lr</td><td> <input type="text" name="lr" value="ja" size="60"/> </td></tr>
+    <tr><td>callback</td><td> <input type="text" name="callback" value="" size="60"/> </td></tr>
+    <tr><td colspan="2"><input type="submit" value="実験！" /></tr><br/>
+  </table>
+</form> 
