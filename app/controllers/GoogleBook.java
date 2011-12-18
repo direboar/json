@@ -55,6 +55,15 @@ public class GoogleBook extends Controller {
 		return string == null || string.trim().equals("");
 	}
 
+	/**
+	 * サンプル画面から本サービスを使用する
+	 * @param q
+	 * @param startIndex
+	 * @param maxResults
+	 * @param minViewability
+	 * @param lr
+	 * @param callback
+	 */
 	public static void feedsForm(String q, String startIndex,
 			String maxResults, String minViewability, String lr, String callback) {
 
@@ -88,6 +97,10 @@ public class GoogleBook extends Controller {
 		renderJSON(atom2Json.toJson(document));
 	}
 
+	/**
+	 * googlebookに連携するサービス
+	 * @throws Exception
+	 */
 	public static void feeds() throws Exception {
 		String url = "http://books.google.com/books/feeds/volumes?";
 		String callback = null;
